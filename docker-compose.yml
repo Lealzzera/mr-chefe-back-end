@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: mr-chefe-back-end
+    image: postgres
+    ports:
+      - 5430:5432
+    environment:
+      - POSTGRES_USER=${USER_DATABASE}
+      - POSTGRES_PASSWORD=${USER_DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+      - PGDATA=/data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
