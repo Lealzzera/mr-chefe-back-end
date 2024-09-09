@@ -7,5 +7,7 @@ export type CreateUserProps = {
 };
 
 export interface IUsersRepository {
+  findUsers(): Promise<User[] | []>;
+  findById({ id }: { id: string }): Promise<User | null>;
   create({ name, email, password }: CreateUserProps): Promise<User>;
 }

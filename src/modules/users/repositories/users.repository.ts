@@ -8,8 +8,21 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
-  create({ name, email, password }: CreateUserProps): Promise<User> {
-    const user = prisma.user.create({
+  async findUsers(): Promise<User[] | []> {
+    const users = await prisma.user.findMany();
+    return users;
+  }
+  async findById({ id }: { id: string }): Promise<User | null> {
+    const user = await prisma.user.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    return user;
+  }
+  async create({ name, email, password }: CreateUserProps): Promise<User> {
+    const user = await prisma.user.create({
       data: {
         name,
         email,
