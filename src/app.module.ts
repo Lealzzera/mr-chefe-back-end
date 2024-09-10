@@ -1,16 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { EnvModule } from './env/env.module';
-import { envSchema } from './env/env';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { StoresModule } from './modules/stores/stores.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      validate: (env) => envSchema.parse(env),
+      envFilePath: '.env',
       isGlobal: true,
     }),
-    EnvModule,
     UsersModule,
+    AuthModule,
+    StoresModule,
   ],
 })
 export class AppModule {}

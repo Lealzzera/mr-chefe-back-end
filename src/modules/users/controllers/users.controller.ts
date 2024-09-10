@@ -2,15 +2,12 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Get,
   HttpCode,
-  Param,
   Post,
 } from '@nestjs/common';
 import { RegisterService } from '../use-cases/register.service';
 import { z } from 'zod';
-import { FindUserByIdService } from '../use-cases/find-user-by-id.service';
-import { FindAllUsersService } from '../use-cases/find-all-users.service';
+import { FindUserByEmailService } from '../use-cases/find-user-by-email.service';
 
 class RegisterDto {
   name: string;
@@ -25,8 +22,7 @@ class RegisterDto {
 export class UsersController {
   constructor(
     private readonly registerService: RegisterService,
-    private readonly findUserByIdService: FindUserByIdService,
-    private readonly findAllUsersService: FindAllUsersService,
+    private readonly findUserByEmailService: FindUserByEmailService,
   ) {}
 
   @Post()
@@ -52,22 +48,11 @@ export class UsersController {
   }
 
   @HttpCode(200)
-  @Get(':id')
-  async getAnUser(@Param('id') id: string) {
+  @Post('/me')
+  async findAnUser(@Body() email: string) {
     try {
-      const user = this.findUserByIdService.exec({ id });
+      const { user } = await this.findUserByEmailService.exec(email);
       return user;
-    } catch (err) {
-      throw new BadRequestException({ message: err.message });
-    }
-  }
-
-  @HttpCode(200)
-  @Get(':id')
-  async getAllUsers() {
-    try {
-      const users = await this.findAllUsersService.exec();
-      return { users };
     } catch (err) {
       throw new BadRequestException({ message: err.message });
     }
