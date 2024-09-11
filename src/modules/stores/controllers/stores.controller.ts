@@ -16,14 +16,18 @@ export class StoresController {
     @Body()
     { name, street, neighborhood, city, state, cep, userId }: CreateStoreDTO,
   ) {
-    return this.createStoreService.exec({
-      name,
-      street,
-      neighborhood,
-      city,
-      state,
-      cep,
-      userId,
-    });
+    try {
+      return this.createStoreService.exec({
+        name,
+        street,
+        neighborhood,
+        city,
+        state,
+        cep,
+        userId,
+      });
+    } catch (err) {
+      return { err };
+    }
   }
 }
