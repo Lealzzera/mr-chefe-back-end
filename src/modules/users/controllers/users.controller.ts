@@ -6,14 +6,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { RegisterService } from '../use-cases/register.service';
-import { z } from 'zod';
 import { FindUserByEmailService } from '../use-cases/find-user-by-email.service';
-
-class RegisterDto {
-  name: string;
-  email: string;
-  password: string;
-}
+import { RegisterUserDTO } from '../dto/register-user.dto';
 
 @Controller({
   path: 'users',
@@ -27,23 +21,15 @@ export class UsersController {
 
   @Post()
   @HttpCode(201)
-  async registerUser(@Body() { name, email, password }: RegisterDto) {
+  async registerUser(@Body() { name, email, password }: RegisterUserDTO) {
     try {
-      const registerUserBodySchema = z.object({
-        name: z.string(),
-        password: z.string().min(6),
-        email: z.string().email(),
-      });
-
-      const userData = registerUserBodySchema.parse({ name, email, password });
-
-      this.registerService.exec({
-        name: userData.name,
-        email: userData.email,
-        password: userData.password,
+      await this.registerService.exec({
+        name,
+        email,
+        password,
       });
     } catch (err) {
-      throw new BadRequestException({ message: err.message });
+      return { message: err.response };
     }
   }
 
