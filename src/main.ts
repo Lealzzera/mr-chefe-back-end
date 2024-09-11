@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieparser from 'cookie-parser';
+import { hostname } from 'os';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -12,6 +13,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   Logger.log(`Running on ${port}`);
-  await app.listen(port);
+  await app.listen(Number(port));
 }
 bootstrap();
