@@ -8,6 +8,15 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
+  async findUserById(id: string): Promise<User | null> {
+    const user = await prisma.user.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    return user;
+  }
   async findUsers(): Promise<User[] | []> {
     const users = await prisma.user.findMany();
     return users;

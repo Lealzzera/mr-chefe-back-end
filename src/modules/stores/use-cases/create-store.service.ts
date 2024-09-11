@@ -1,6 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IStoreRepository } from '../interfaces/store-repository.interface';
 import { Store } from '@prisma/client';
+import { IUsersRepository } from 'src/modules/users/interfaces/users-repository.interface';
 
 export interface CreateStoreServiceRequest {
   name: string;
@@ -20,6 +21,7 @@ export interface CreateStoreServiceResponse {
 export class CreateStoreService {
   constructor(
     @Inject('IStoreRepository') private storeRepository: IStoreRepository,
+    @Inject('IUsersRepository') private userRepository: IUsersRepository,
   ) {}
 
   async exec({
@@ -31,6 +33,12 @@ export class CreateStoreService {
     cep,
     userId,
   }: CreateStoreServiceRequest): Promise<CreateStoreServiceResponse> {
+    const user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
     const store = await this.storeRepository.createStore({
       name,
       street,

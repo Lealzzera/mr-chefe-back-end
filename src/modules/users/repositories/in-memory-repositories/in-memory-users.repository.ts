@@ -7,6 +7,12 @@ import { randomUUID } from 'crypto';
 
 export class InMemoryUsersRepository implements IUsersRepository {
   private usersDatabase = [];
+
+  findUserById(id: string): Promise<User | null> {
+    const user = this.usersDatabase.find((item) => item.id === id);
+
+    return user;
+  }
   async findUsers(): Promise<User[] | []> {
     const users = this.usersDatabase.map((user) => user);
     return users;

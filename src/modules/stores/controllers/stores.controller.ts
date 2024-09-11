@@ -1,15 +1,7 @@
 import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { CreateStoreService } from '../use-cases/create-store.service';
 import { AccessTokenGuard } from 'src/guards/access-token.guard';
-class CreateStoreDto {
-  name: string;
-  street: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  cep: string;
-  userId: string;
-}
+import { CreateStoreDTO } from '../dto/create-store.dto';
 
 @Controller({
   path: 'stores',
@@ -22,7 +14,7 @@ export class StoresController {
   @HttpCode(201)
   async create(
     @Body()
-    { name, street, neighborhood, city, state, cep, userId }: CreateStoreDto,
+    { name, street, neighborhood, city, state, cep, userId }: CreateStoreDTO,
   ) {
     return this.createStoreService.exec({
       name,
