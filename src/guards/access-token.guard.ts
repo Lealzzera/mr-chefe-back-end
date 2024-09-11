@@ -18,10 +18,9 @@ export class AccessTokenGuard implements CanActivate {
     }
 
     try {
-      const tokenDecoded = await this.jwtService.verify(
-        authorization.split(' ')[1],
-        { secret: process.env.JWT_ACCES_TOKEN_SECRET },
-      );
+      await this.jwtService.verify(authorization.split(' ')[1], {
+        secret: process.env.JWT_ACCES_TOKEN_SECRET,
+      });
 
       return true;
     } catch (error) {
