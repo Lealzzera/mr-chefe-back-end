@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { FindUserByEmailService } from '../users/use-cases/find-user-by-email.service';
 import { compare } from 'bcrypt';
@@ -18,9 +18,15 @@ export class AuthService {
 
   async generateTokens({ email, password }: AuthServiceRequest) {
     const { user } = await this.findUserByEmailService.exec(email);
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid user credentials.');
+    }
+
     const doesPasswordMatch = await compare(password, user.password);
-    if (!user || !doesPasswordMatch) {
-      throw new Error('Invalid user credentials.');
+
+    if (!doesPasswordMatch) {
+      throw new UnauthorizedException('Invalid user credentials.');
     }
 
     const payload = { sub: user.id };

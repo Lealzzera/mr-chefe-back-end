@@ -9,7 +9,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { z } from 'zod';
 import { Request, Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 
@@ -26,19 +25,17 @@ export class AuthController {
     @Body() { email, password }: { email: string; password: string },
     @Res() response: Response,
   ) {
-    const signInBodySchema = z.object({
-      email: z.string().email(),
-      password: z.string().min(6),
-    });
-    const userData = signInBodySchema.parse({ email, password });
+    if (!email || !password) {
+      throw new UnauthorizedException('Invalid user credentials.');
+    }
     const { accessToken, refreshToken } = await this.authService.generateTokens(
       {
-        email: userData.email,
-        password: userData.password,
+        email,
+        password,
       },
     );
 
-    const sevenDaysExpirationTime = 7 * 24 * 60 * 1000;
+    const sevenDaysExpirationTime = 60 * 1000 * 60 * 24 * 7;
 
     response.cookie('refresh_token', refreshToken, {
       httpOnly: true,
