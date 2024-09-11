@@ -47,6 +47,7 @@ export class AuthController {
     return response.json({ accessToken }).status(200);
   }
 
+  @HttpCode(200)
   @Post('refresh')
   async refresh(@Req() request: Request) {
     const refreshToken = await request.cookies['refresh_token'];

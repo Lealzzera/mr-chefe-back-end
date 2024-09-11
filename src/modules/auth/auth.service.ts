@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { FindUserByEmailService } from '../users/use-cases/find-user-by-email.service';
 import { compare } from 'bcrypt';
 import { JwtPayload } from 'src/@types/jwt-payload';
+import { IUsersRepository } from '../users/interfaces/users-repository.interface';
 
 export interface AuthServiceRequest {
   email: string;
@@ -12,12 +12,12 @@ export interface AuthServiceRequest {
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly findUserByEmailService: FindUserByEmailService,
+    @Inject('IUsersRepository') private usersRepository: IUsersRepository,
     private jwtService: JwtService,
   ) {}
 
   async generateTokens({ email, password }: AuthServiceRequest) {
-    const { user } = await this.findUserByEmailService.exec(email);
+    const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
       throw new UnauthorizedException('Invalid user credentials.');
