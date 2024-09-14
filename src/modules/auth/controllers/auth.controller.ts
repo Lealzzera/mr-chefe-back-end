@@ -37,14 +37,16 @@ export class AuthController {
 
     const sevenDaysExpirationTime = 60 * 1000 * 60 * 24 * 7;
 
-    response.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== 'production' ? false : true,
-      sameSite: 'strict',
-      maxAge: sevenDaysExpirationTime,
-    });
-
-    return response.json({ accessToken }).status(200);
+    return response
+      .status(201)
+      .cookie('refresh_token', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: sevenDaysExpirationTime,
+        sameSite: 'none',
+        path: '/',
+      })
+      .json({ accessToken });
   }
 
   @HttpCode(200)
