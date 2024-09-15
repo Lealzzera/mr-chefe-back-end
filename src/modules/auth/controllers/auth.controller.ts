@@ -43,7 +43,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: sevenDaysExpirationTime,
-        sameSite: 'none',
+        sameSite: 'strict',
         path: '/',
       })
       .json({ accessToken });
