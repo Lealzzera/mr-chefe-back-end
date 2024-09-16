@@ -16,7 +16,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async generateTokens({ email, password }: AuthServiceRequest) {
+  async generateToken({ email, password }: AuthServiceRequest) {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
@@ -30,16 +30,10 @@ export class AuthService {
     }
 
     const payload = { sub: user.id };
-    const accessToken = await this.generateAccessToken(payload);
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
-      expiresIn: '7d',
+    const accessToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      expiresIn: '15d',
     });
-    return { accessToken, refreshToken };
-  }
-
-  async generateAccessToken(payload: JwtPayload) {
-    const accessToken = this.jwtService.sign(payload);
-    return accessToken;
+    return { accessToken };
   }
 }

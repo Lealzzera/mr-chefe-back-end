@@ -14,10 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('sessions')
@@ -28,39 +25,21 @@ export class AuthController {
     if (!email || !password) {
       throw new UnauthorizedException('Invalid user credentials.');
     }
-    const { accessToken, refreshToken } = await this.authService.generateTokens(
-      {
-        email,
-        password,
-      },
-    );
+    const { accessToken } = await this.authService.generateToken({
+      email,
+      password,
+    });
 
-    const sevenDaysExpirationTime = 60 * 1000 * 60 * 24 * 7;
-
+    const fifteenMinutesExpirationTime = 60 * 1000 * 60 * 24 * 15;
     return response
       .status(201)
-      .cookie('refresh_token', refreshToken, {
+      .cookie('access_token', accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: sevenDaysExpirationTime,
-        sameSite: 'strict',
+        maxAge: fifteenMinutesExpirationTime,
+        sameSite: 'lax',
         path: '/',
       })
       .json({ accessToken });
-  }
-
-  @HttpCode(200)
-  @Post('refresh')
-  async refresh(@Req() request: Request) {
-    const refreshToken = await request.cookies['refresh_token'];
-
-    if (!refreshToken) {
-      throw new UnauthorizedException();
-    }
-
-    const { sub } = await this.jwtService.decode(refreshToken);
-    const accessToken = await this.authService.generateAccessToken({ sub });
-
-    return { accessToken };
   }
 }

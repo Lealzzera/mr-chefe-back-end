@@ -10,8 +10,8 @@ import { UsersRepository } from '../users/repositories/users.repository';
   imports: [
     ConfigModule,
     JwtModule.register({
-      secret: process.env.JWT_ACCES_TOKEN_SECRET,
-      signOptions: { expiresIn: '5min' },
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      signOptions: { expiresIn: '15d' },
     }),
     PassportModule,
     JwtModule,
