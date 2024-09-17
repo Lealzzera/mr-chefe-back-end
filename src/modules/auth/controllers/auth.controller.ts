@@ -30,14 +30,15 @@ export class AuthController {
       password,
     });
 
-    const fifteenMinutesExpirationTime = 60 * 1000 * 60 * 24 * 15;
+    const fifteenDaysFromNow = 60 * 1000 * 60 * 24 * 15;
     return response
       .status(201)
       .cookie('access_token', accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: fifteenMinutesExpirationTime,
+        maxAge: fifteenDaysFromNow,
         sameSite: 'lax',
+        expires: new Date(Date.now() + fifteenDaysFromNow),
       })
       .json({ accessToken });
   }
