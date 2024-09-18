@@ -37,7 +37,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: fifteenDaysFromNow,
-        sameSite: 'lax',
+        sameSite: 'none',
         expires: new Date(Date.now() + fifteenDaysFromNow),
         domain: process.env.NODE_ENV === 'production' ? '.mrchefe.com.br' : '',
       })
