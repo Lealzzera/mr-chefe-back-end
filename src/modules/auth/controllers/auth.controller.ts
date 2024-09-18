@@ -39,6 +39,10 @@ export class AuthController {
         maxAge: fifteenDaysFromNow,
         sameSite: 'lax',
         expires: new Date(Date.now() + fifteenDaysFromNow),
+        domain:
+          process.env.NODE_ENV === 'production'
+            ? 'https://www.mrchefe.com.br'
+            : 'http://localhost:3000/',
       })
       .json({ accessToken });
   }
