@@ -34,11 +34,12 @@ export class AuthController {
     return response
       .status(201)
       .cookie('access_token', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false,
+        secure: false,
         maxAge: fifteenDaysFromNow,
-        sameSite: 'lax',
+        sameSite: 'none',
         expires: new Date(Date.now() + fifteenDaysFromNow),
+        path: '/*',
       })
       .json({ accessToken });
   }
