@@ -32,8 +32,29 @@ export class AuthService {
     const payload = { sub: user.id };
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      expiresIn: '1h',
+    });
+
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
       expiresIn: '15d',
     });
-    return { accessToken };
+    return { accessToken, refreshToken };
+  }
+
+  async generateRefreshToken(user) {
+    const payload = { sub: user.sub };
+
+    const accessToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      expiresIn: '1h',
+    });
+
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+      expiresIn: '15d',
+    });
+
+    return { accessToken, refreshToken };
   }
 }

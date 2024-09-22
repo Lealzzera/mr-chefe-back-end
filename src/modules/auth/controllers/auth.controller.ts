@@ -7,40 +7,38 @@ import {
   Res,
   Req,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { Request, Response } from 'express';
-import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
+import { AuthDTO } from '../dto/auth.dto';
+import { RefreshJWTGuard } from 'src/guards/refresh-token.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(201)
   @Post('sessions')
   async signIn(
-    @Body() { email, password }: { email: string; password: string },
+    @Body() { email, password }: AuthDTO,
     @Res() response: Response,
   ) {
     if (!email || !password) {
       throw new UnauthorizedException('Invalid user credentials.');
     }
-    const { accessToken } = await this.authService.generateToken({
+    const { accessToken, refreshToken } = await this.authService.generateToken({
       email,
       password,
     });
 
-    const fifteenDaysFromNow = 60 * 1000 * 60 * 24 * 15;
-    return response
-      .status(201)
-      .cookie('access_token', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: fifteenDaysFromNow,
-        sameSite: 'none',
-        expires: new Date(Date.now() + fifteenDaysFromNow),
-        domain: process.env.NODE_ENV === 'production' ? '.mrchefe.com.br' : '',
-      })
-      .json({ accessToken });
+    return response.status(201).json({ accessToken, refreshToken });
+  }
+
+  @UseGuards(RefreshJWTGuard)
+  @HttpCode(201)
+  @Post('refresh')
+  async refreshToken(@Req() req) {
+    return await this.authService.generateRefreshToken(req.user);
   }
 }

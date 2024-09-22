@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class AccessTokenGuard implements CanActivate {
+export class RefreshJWTGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const authorization = context.switchToHttp().getRequest();
@@ -20,7 +20,7 @@ export class AccessTokenGuard implements CanActivate {
       const payload = await this.jwtService.verify(
         authorization.headers.authorization.split(' ')[1],
         {
-          secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+          secret: process.env.JWT_REFRESH_TOKEN_SECRET,
         },
       );
 
