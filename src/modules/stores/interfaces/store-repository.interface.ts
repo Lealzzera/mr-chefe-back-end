@@ -11,6 +11,7 @@ export type CreateStoreProps = {
 };
 
 export interface IStoreRepository {
+  findStoreById(id: number): Promise<Store | null>;
   createStore({
     name,
     street,

@@ -6,6 +6,10 @@ import {
 
 export class InMemoryStoresRepository implements IStoreRepository {
   private storeDatabase = [];
+  async findStoreById(id: number): Promise<Store | null> {
+    const store = this.storeDatabase.find((store) => store.id === id);
+    return store || null;
+  }
   async createStore({
     name,
     street,
