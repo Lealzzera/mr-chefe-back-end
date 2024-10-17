@@ -1,28 +1,31 @@
 import {
   IsEmail,
+  IsEnum,
+  IsNumber,
   IsPhoneNumber,
   IsString,
-  IsStrongPassword,
 } from 'class-validator';
 
-export class RegisterUserDTO {
+enum UserRole {
+  USER = 'USER',
+  MANAGER = 'MANAGER',
+}
+
+export class RegisterMemberDTO {
+  @IsNumber()
+  idStore: number;
+
   @IsString()
   name: string;
 
   @IsEmail()
   email: string;
 
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 0,
-    minUppercase: 0,
-    minSymbols: 0,
-    minNumbers: 0,
-  })
-  password: string;
-
   @IsPhoneNumber('BR')
   phoneNumber: string;
+
+  @IsEnum(UserRole)
+  role: UserRole;
 
   @IsString()
   cpf: string;

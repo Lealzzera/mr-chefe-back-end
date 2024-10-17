@@ -7,6 +7,8 @@ export interface RegisterServiceRequest {
   name: string;
   email: string;
   password: string;
+  phoneNumber: string;
+  cpf: string;
 }
 
 export interface RegisterRequestResponse {
@@ -22,6 +24,8 @@ export class RegisterService {
     name,
     email,
     password,
+    phoneNumber,
+    cpf,
   }: RegisterServiceRequest): Promise<RegisterRequestResponse> {
     const doesUserExist = await this.usersRepository.findByEmail(email);
 
@@ -34,6 +38,8 @@ export class RegisterService {
       name,
       email,
       password: passwordHashed,
+      phoneNumber,
+      cpf,
     });
 
     return { user };
