@@ -19,6 +19,8 @@ describe('Create store service tests', () => {
       name: 'John Doe',
       email: 'john@acme.com',
       password: 'test123456',
+      cpf: '00000000000',
+      phoneNumber: '11999999999',
     });
     const { store } = await sut.exec({
       name: 'Test Store',
@@ -27,13 +29,13 @@ describe('Create store service tests', () => {
       neighborhood: 'test neighborhood',
       state: 'test state',
       street: 'test street',
-      userId: user.id,
+      ownerId: user.id,
     });
 
     expect(store.id).toEqual(expect.any(Number));
   });
 
-  it('should not be able to create a store with a wrong user id', async () => {
+  it('should not be able to create a store with a wrong owner id', async () => {
     await expect(
       sut.exec({
         name: 'Test Store',
@@ -42,7 +44,7 @@ describe('Create store service tests', () => {
         neighborhood: 'test neighborhood',
         state: 'test state',
         street: 'test street',
-        userId: '1234',
+        ownerId: '1234',
       }),
     ).rejects.toBeInstanceOf(NotFoundException);
   });

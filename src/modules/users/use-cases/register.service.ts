@@ -1,6 +1,11 @@
 import { User } from '@prisma/client';
 import { IUsersRepository } from '../interfaces/users-repository.interface';
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { hash } from 'bcrypt';
 
 export interface RegisterServiceRequest {
@@ -31,6 +36,12 @@ export class RegisterService {
 
     if (doesUserExist) {
       throw new ConflictException('User e-mail provided already exists.');
+    }
+
+    if (!email || !name || !password || !phoneNumber || !cpf) {
+      throw new BadRequestException(
+        'Must to provide: Email, Name, Password, Phone number and CPF',
+      );
     }
 
     const passwordHashed = await hash(password, 6);
