@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CreateStoreService } from './use-cases/create-store.service';
 import { StoreRepository } from './repositories/store.repository';
 import { StoresController } from './controllers/stores.controller';
@@ -7,7 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { UsersRepository } from '../users/repositories/users.repository';
 
 @Module({
-  imports: [UsersModule],
+  imports: [forwardRef(() => UsersModule)],
   providers: [
     CreateStoreService,
     JwtService,
