@@ -10,7 +10,7 @@ export interface CreateStoreServiceRequest {
   city: string;
   state: string;
   cep: string;
-  userId: string;
+  ownerId: string;
 }
 
 export interface CreateStoreServiceResponse {
@@ -31,9 +31,9 @@ export class CreateStoreService {
     city,
     state,
     cep,
-    userId,
+    ownerId,
   }: CreateStoreServiceRequest): Promise<CreateStoreServiceResponse> {
-    const user = await this.userRepository.findUserById(userId);
+    const user = await this.userRepository.findUserById(ownerId);
 
     if (!user) {
       throw new NotFoundException('User not found.');
@@ -46,7 +46,7 @@ export class CreateStoreService {
       city,
       state,
       cep,
-      userId,
+      ownerId,
     });
     return { store };
   }

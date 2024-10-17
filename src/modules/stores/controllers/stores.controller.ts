@@ -14,7 +14,7 @@ export class StoresController {
   @HttpCode(201)
   async create(
     @Body()
-    { name, street, neighborhood, city, state, cep, userId }: CreateStoreDTO,
+    { name, street, neighborhood, city, state, cep, ownerId }: CreateStoreDTO,
   ) {
     try {
       return this.createStoreService.exec({
@@ -24,7 +24,7 @@ export class StoresController {
         city,
         state,
         cep,
-        userId,
+        ownerId,
       });
     } catch (err) {
       return { err };

@@ -13,17 +13,17 @@ export class InMemoryStoresRepository implements IStoreRepository {
     city,
     state,
     cep,
-    userId,
+    ownerId,
   }: CreateStoreProps): Promise<Store> {
     const store = {
-      id: 1,
+      id: this.storeDatabase.length + 1,
       name,
       street,
       neighborhood,
       city,
       state,
       cep,
-      userId,
+      ownerId,
     };
     await this.storeDatabase.push(store);
 

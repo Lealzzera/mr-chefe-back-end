@@ -7,7 +7,7 @@ export type CreateStoreProps = {
   city: string;
   state: string;
   cep: string;
-  userId: string;
+  ownerId: string;
 };
 
 export interface IStoreRepository {
@@ -18,6 +18,6 @@ export interface IStoreRepository {
     city,
     state,
     cep,
-    userId,
+    ownerId,
   }: CreateStoreProps): Promise<Store>;
 }

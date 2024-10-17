@@ -13,7 +13,7 @@ export class StoreRepository implements IStoreRepository {
     city,
     state,
     cep,
-    userId,
+    ownerId,
   }: CreateStoreProps): Promise<Store> {
     const store = await prisma.store.create({
       data: {
@@ -23,7 +23,7 @@ export class StoreRepository implements IStoreRepository {
         city,
         state,
         cep,
-        userId,
+        ownerId,
       },
     });
 
