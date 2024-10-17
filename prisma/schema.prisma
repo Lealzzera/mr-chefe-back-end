@@ -18,6 +18,8 @@ model User {
   name        String
   email       String      @unique
   password    String
+  cpf         String?     @unique
+  phoneNumber String?     @unique
   stores      UserStore[]
   ownedStores Store[]
 
