@@ -63,7 +63,7 @@ export class UsersRepository implements IUsersRepository {
         email,
         password,
         cpf,
-        phoneNumber,
+        phoneNumber: phoneNumber,
       },
     });
     return user;

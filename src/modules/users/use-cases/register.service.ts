@@ -52,7 +52,6 @@ export class RegisterService {
       phoneNumber,
       cpf,
     });
-
     return { user };
   }
 }

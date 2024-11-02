@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Inject,
   NotFoundException,
   UnauthorizedException,
@@ -39,10 +38,6 @@ export class RegisterMemberService {
   }: IRegisterMember) {
     const doesUserExist = await this.usersRepository.findByEmail(email);
 
-    if (doesUserExist) {
-      throw new ConflictException('User e-mail provided already exists.');
-    }
-
     if (!idStore) {
       throw new UnauthorizedException('idStore must to be provided.');
     }
@@ -54,20 +49,31 @@ export class RegisterMemberService {
     }
 
     //TODO: CREATE AN WAY TO SEND THIS PASSWORD BY EMAIL
-    const password = generate({ length: 8, numbers: true });
+    let user: User;
+    if (!doesUserExist) {
+      const password = generate({ length: 8, numbers: true });
 
-    const passwordHashed = await hash(password, 6);
+      const passwordHashed = await hash(password, 6);
 
-    const user = await this.usersRepository.create({
-      name,
-      email,
-      phoneNumber,
-      password: passwordHashed,
-      cpf,
-    });
+      user = await this.usersRepository.create({
+        name,
+        email,
+        phoneNumber,
+        password: passwordHashed,
+        cpf,
+      });
+    }
+
+    const isUserAlreadyRegistered = this.usersRepository.findUserById(
+      doesUserExist.id,
+    );
+
+    if (isUserAlreadyRegistered) {
+      throw new UnauthorizedException('User already registered on the store.');
+    }
 
     await this.usersRepository.addUserToStore({
-      userId: user.id,
+      userId: doesUserExist ? doesUserExist.id : user.id,
       storeId: idStore,
       role,
     });

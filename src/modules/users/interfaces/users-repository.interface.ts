@@ -11,7 +11,7 @@ export type CreateUserProps = {
 export type AddUserToStoreProps = {
   userId: string;
   storeId: number;
-  role: 'USER' | 'MANAGER';
+  role: 'USER' | 'MANAGER' | 'ALL_ACCESS';
 };
 
 export interface IUsersRepository {
