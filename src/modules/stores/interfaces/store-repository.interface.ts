@@ -7,10 +7,12 @@ export type CreateStoreProps = {
   city: string;
   state: string;
   cep: string;
-  userId: string;
+  ownerId: string;
 };
 
 export interface IStoreRepository {
+  findStoreByOwnerId(ownerId: string): Promise<Store | null>;
+  findStoreById(id: number): Promise<Store | null>;
   createStore({
     name,
     street,
@@ -18,6 +20,6 @@ export interface IStoreRepository {
     city,
     state,
     cep,
-    userId,
+    ownerId,
   }: CreateStoreProps): Promise<Store>;
 }

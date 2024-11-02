@@ -6,6 +6,15 @@ import {
 
 export class InMemoryStoresRepository implements IStoreRepository {
   private storeDatabase = [];
+  async findStoreByOwnerId(ownerId: string): Promise<Store | null> {
+    const store = this.storeDatabase.find((store) => store.ownerId === ownerId);
+    return store || null;
+  }
+  async findStoreById(id: number): Promise<Store | null> {
+    const store = this.storeDatabase.find((store) => store.id === id);
+    return store || null;
+  }
+
   async createStore({
     name,
     street,
@@ -13,17 +22,17 @@ export class InMemoryStoresRepository implements IStoreRepository {
     city,
     state,
     cep,
-    userId,
+    ownerId,
   }: CreateStoreProps): Promise<Store> {
     const store = {
-      id: 1,
+      id: this.storeDatabase.length + 1,
       name,
       street,
       neighborhood,
       city,
       state,
       cep,
-      userId,
+      ownerId,
     };
     await this.storeDatabase.push(store);
 

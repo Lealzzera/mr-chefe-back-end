@@ -14,13 +14,21 @@ describe('Register service tests', () => {
   });
 
   it('should be able to register an user', async () => {
-    const { name, email, password } = {
+    const { name, email, password, phoneNumber, cpf } = {
       name: 'John Doe',
       email: 'john.doe@acme.com',
       password: 'test123456',
+      phoneNumber: '11999999999',
+      cpf: '00000000000',
     };
 
-    const { user } = await sut.exec({ name, email, password });
+    const { user } = await sut.exec({
+      name,
+      email,
+      password,
+      phoneNumber,
+      cpf,
+    });
 
     expect(user.id).toEqual(expect.any(String));
   });
@@ -30,12 +38,16 @@ describe('Register service tests', () => {
       name: 'John Doe',
       email: 'john.doe@acme.com',
       password: 'test123456',
+      phoneNumber: '11999999999',
+      cpf: '00000000000',
     };
 
     await sut.exec({
       name: userData.name,
       email: userData.email,
       password: userData.password,
+      phoneNumber: userData.phoneNumber,
+      cpf: userData.cpf,
     });
 
     await expect(
@@ -43,6 +55,8 @@ describe('Register service tests', () => {
         name: userData.name,
         email: userData.email,
         password: userData.password,
+        phoneNumber: userData.phoneNumber,
+        cpf: userData.cpf,
       }),
     ).rejects.toBeInstanceOf(ConflictException);
   });
@@ -52,12 +66,16 @@ describe('Register service tests', () => {
       name: 'John Doe',
       email: 'john.doe@acme.com',
       password: 'test123456',
+      phoneNumber: '11999999999',
+      cpf: '00000000000',
     };
 
     const { user } = await sut.exec({
       name: userData.name,
       email: userData.email,
       password: userData.password,
+      phoneNumber: userData.phoneNumber,
+      cpf: userData.cpf,
     });
 
     const userPassword = await compare(userData.password, user.password);

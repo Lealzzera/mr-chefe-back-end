@@ -14,25 +14,46 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  name     String
-  email    String  @unique
-  password String
-  stores   Store[]
+  id          String      @id @default(uuid())
+  name        String
+  email       String      @unique
+  password    String
+  cpf         String?
+  phoneNumber String?
+  stores      UserStore[]
+  ownedStores Store[]
 
   @@map("users")
 }
 
 model Store {
-  id           Int    @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   name         String
   street       String
   neighborhood String
   city         String
   state        String
   cep          String
-  user         User   @relation(fields: [userId], references: [id])
-  userId       String
+  users        UserStore[]
+  owner        User        @relation(fields: [ownerId], references: [id])
+  ownerId      String
 
   @@map("stores")
+}
+
+model UserStore {
+  userId  String
+  storeId Int
+  role    Role   @default(USER)
+  user    User   @relation(fields: [userId], references: [id])
+  store   Store  @relation(fields: [storeId], references: [id])
+
+  @@id([userId, storeId])
+  @@map("userStore")
+}
+
+enum Role {
+  MANAGER
+  USER
+  ALL_ACCESS
 }

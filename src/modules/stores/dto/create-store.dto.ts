@@ -20,5 +20,5 @@ export class CreateStoreDTO {
   cep: string;
 
   @IsString()
-  userId: string;
+  ownerId: string;
 }
