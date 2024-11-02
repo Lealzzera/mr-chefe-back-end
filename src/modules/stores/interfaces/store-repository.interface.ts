@@ -11,6 +11,7 @@ export type CreateStoreProps = {
 };
 
 export interface IStoreRepository {
+  findStoreByOwnerId(ownerId: string): Promise<Store | null>;
   findStoreById(id: number): Promise<Store | null>;
   createStore({
     name,

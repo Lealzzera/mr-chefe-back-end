@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { IStoreRepository } from '../interfaces/store-repository.interface';
 import { Store } from '@prisma/client';
 import { IUsersRepository } from 'src/modules/users/interfaces/users-repository.interface';
@@ -21,7 +26,7 @@ export interface CreateStoreServiceResponse {
 export class CreateStoreService {
   constructor(
     @Inject('IStoreRepository') private storeRepository: IStoreRepository,
-    @Inject('IUsersRepository') private userRepository: IUsersRepository,
+    @Inject('IUsersRepository') private usersRepository: IUsersRepository,
   ) {}
 
   async exec({
@@ -33,10 +38,17 @@ export class CreateStoreService {
     cep,
     ownerId,
   }: CreateStoreServiceRequest): Promise<CreateStoreServiceResponse> {
-    const user = await this.userRepository.findUserById(ownerId);
+    const user = await this.usersRepository.findUserById(ownerId);
 
     if (!user) {
       throw new NotFoundException('User not found.');
+    }
+
+    const areThereStore =
+      await this.storeRepository.findStoreByOwnerId(ownerId);
+
+    if (areThereStore) {
+      throw new UnauthorizedException('User already has a store registered.');
     }
 
     const store = await this.storeRepository.createStore({
@@ -48,6 +60,13 @@ export class CreateStoreService {
       cep,
       ownerId,
     });
+
+    await this.usersRepository.addUserToStore({
+      userId: user.id,
+      storeId: store.id,
+      role: 'ALL_ACCESS',
+    });
+
     return { store };
   }
 }

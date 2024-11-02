@@ -6,6 +6,16 @@ import {
 import { prisma } from 'src/prisma/prisma-client';
 
 export class StoreRepository implements IStoreRepository {
+  async findStoreByOwnerId(ownerId: string): Promise<Store | null> {
+    const store = await prisma.store.findFirst({
+      where: {
+        ownerId,
+      },
+    });
+
+    return store ?? null;
+  }
+
   async findStoreById(id: number): Promise<Store | null> {
     const store = await prisma.store.findFirst({
       where: {
