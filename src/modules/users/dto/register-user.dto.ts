@@ -21,7 +21,7 @@ export class RegisterUserDTO {
   })
   password: string;
 
-  @IsPhoneNumber('BR')
+  @IsString()
   phoneNumber: string;
 
   @IsString()
