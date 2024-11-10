@@ -5,6 +5,9 @@ import {
 } from '../../interfaces/store-repository.interface';
 
 export class InMemoryStoresRepository implements IStoreRepository {
+  fetchStoresByStoresId(idStores: number[]): Promise<Store[] | null> {
+    throw new Error('Method not implemented.');
+  }
   private storeDatabase = [];
   async findStoreByOwnerId(ownerId: string): Promise<Store | null> {
     const store = this.storeDatabase.find((store) => store.ownerId === ownerId);

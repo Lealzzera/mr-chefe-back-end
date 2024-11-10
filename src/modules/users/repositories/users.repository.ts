@@ -1,6 +1,5 @@
 import { User, UserStore } from '@prisma/client';
 import {
-  AddUserToStoreProps,
   CreateUserProps,
   IUsersRepository,
 } from '../interfaces/users-repository.interface';
@@ -9,27 +8,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UsersRepository implements IUsersRepository {
-  async findUserInAstoreById(userId: string): Promise<UserStore | null> {
-    const user = await prisma.userStore.findFirst({
-      where: {
-        userId,
-      },
-    });
-
-    return user;
-  }
-  async addUserToStore({ userId, storeId, role }: AddUserToStoreProps) {
-    const userAdded = await prisma.userStore.create({
-      data: {
-        userId,
-        storeId,
-        role,
-      },
-    });
-
-    return userAdded;
-  }
-
   async findUserById(id: string): Promise<User | null> {
     const user = await prisma.user.findFirst({
       where: {

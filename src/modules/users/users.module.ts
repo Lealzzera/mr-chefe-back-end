@@ -6,6 +6,7 @@ import { RegisterMemberService } from './use-cases/register-member.service';
 import { JwtService } from '@nestjs/jwt';
 import { StoresModule } from '../stores/stores.module';
 import { StoreRepository } from '../stores/repositories/store.repository';
+import { UserStoresRepository } from '../userStores/repositories/user-stores.repository';
 
 @Module({
   imports: [forwardRef(() => StoresModule)],
@@ -18,6 +19,7 @@ import { StoreRepository } from '../stores/repositories/store.repository';
       provide: 'IStoreRepository',
       useClass: StoreRepository,
     },
+    { provide: 'IUserStoreRepository', useClass: UserStoresRepository },
   ],
   controllers: [UsersController],
 })

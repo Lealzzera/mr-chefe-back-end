@@ -10,6 +10,28 @@ export type CreateStoreProps = {
   ownerId: string;
 };
 
+export type AddUserToStoreProps = {
+  userId: string;
+  storeId: number;
+  role: 'USER' | 'MANAGER' | 'ALL_ACCESS';
+};
+
+export type FindUserInAStoreById = {
+  userId: string;
+  storeId: number;
+};
+
 export interface IUserStoresRepository {
+  findUserInAStoreById({
+    userId,
+    storeId,
+  }: FindUserInAStoreById): Promise<UserStore | null>;
+
+  addUserToStore({
+    userId,
+    storeId,
+    role,
+  }: AddUserToStoreProps): Promise<UserStore>;
+
   fetchUserStoresByUserId(userId: string): Promise<UserStore[] | null>;
 }

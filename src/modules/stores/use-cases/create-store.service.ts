@@ -7,6 +7,7 @@ import {
 import { IStoreRepository } from '../interfaces/store-repository.interface';
 import { Store } from '@prisma/client';
 import { IUsersRepository } from 'src/modules/users/interfaces/users-repository.interface';
+import { IUserStoresRepository } from 'src/modules/userStores/interfaces/user-stores-repository.interface';
 
 export interface CreateStoreServiceRequest {
   name: string;
@@ -27,6 +28,8 @@ export class CreateStoreService {
   constructor(
     @Inject('IStoreRepository') private storeRepository: IStoreRepository,
     @Inject('IUsersRepository') private usersRepository: IUsersRepository,
+    @Inject('IUserStoreRepository')
+    private userStoreRepository: IUserStoresRepository,
   ) {}
 
   async exec({
@@ -61,7 +64,7 @@ export class CreateStoreService {
       ownerId,
     });
 
-    await this.usersRepository.addUserToStore({
+    await this.userStoreRepository.addUserToStore({
       userId: user.id,
       storeId: store.id,
       role: 'ALL_ACCESS',

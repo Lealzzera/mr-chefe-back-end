@@ -8,6 +8,7 @@ import { User } from '@prisma/client';
 import { generate } from 'generate-password';
 import { hash } from 'bcrypt';
 import { IStoreRepository } from 'src/modules/stores/interfaces/store-repository.interface';
+import { IUserStoresRepository } from 'src/modules/userStores/interfaces/user-stores-repository.interface';
 
 export interface IRegisterMember {
   idStore: number;
@@ -26,6 +27,8 @@ export class RegisterMemberService {
   constructor(
     @Inject('IUsersRepository') private usersRepository: IUsersRepository,
     @Inject('IStoreRepository') private storeRepository: IStoreRepository,
+    @Inject('IUserStoreRepository')
+    private userStoreRepository: IUserStoresRepository,
   ) {}
 
   async exec({
@@ -62,17 +65,27 @@ export class RegisterMemberService {
         password: passwordHashed,
         cpf,
       });
+
+      await this.userStoreRepository.addUserToStore({
+        userId: doesUserExist ? doesUserExist.id : user.id,
+        storeId: idStore,
+        role,
+      });
+
+      return { user };
     }
 
-    const isUserAlreadyRegistered = this.usersRepository.findUserById(
-      doesUserExist.id,
-    );
+    const isUserAlreadyRegistered =
+      await this.userStoreRepository.findUserInAStoreById({
+        userId: doesUserExist.id,
+        storeId: idStore,
+      });
 
-    if (isUserAlreadyRegistered) {
+    if (isUserAlreadyRegistered.storeId === idStore) {
       throw new UnauthorizedException('User already registered on the store.');
     }
 
-    await this.usersRepository.addUserToStore({
+    await this.userStoreRepository.addUserToStore({
       userId: doesUserExist ? doesUserExist.id : user.id,
       storeId: idStore,
       role,
