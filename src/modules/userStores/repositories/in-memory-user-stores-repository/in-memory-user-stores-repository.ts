@@ -7,20 +7,24 @@ import {
 } from '../../interfaces/user-stores-repository.interface';
 
 export class InMemoryUserStoresRepository implements IUserStoresRepository {
-  findUserInAStoreById({
+  private userStoresDataBase = [];
+  async findUserInAStoreById({
     userId,
     storeId,
   }: FindUserInAStoreById): Promise<UserStore | null> {
-    throw new Error('Method not implemented.');
+    return null;
   }
-  addUserToStore({
+  async addUserToStore({
     userId,
     storeId,
     role,
   }: AddUserToStoreProps): Promise<UserStore> {
-    throw new Error('Method not implemented.');
+    const userStore = { userId, storeId, role };
+
+    await this.userStoresDataBase.push(userStore);
+
+    return userStore;
   }
-  private userStoresDataBase = [];
   async fetchUserStoresByUserId(userId: string): Promise<UserStore[] | null> {
     const stores = this.userStoresDataBase.filter(
       (item) => item.userId === userId,

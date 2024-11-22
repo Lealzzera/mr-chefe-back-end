@@ -7,10 +7,12 @@ import { JwtService } from '@nestjs/jwt';
 import { StoresModule } from '../stores/stores.module';
 import { StoreRepository } from '../stores/repositories/store.repository';
 import { UserStoresRepository } from '../userStores/repositories/user-stores.repository';
+import { GetUserByIdService } from './use-cases/get-user-by-id.service';
 
 @Module({
   imports: [forwardRef(() => StoresModule)],
   providers: [
+    GetUserByIdService,
     RegisterService,
     JwtService,
     RegisterMemberService,
