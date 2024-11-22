@@ -30,7 +30,7 @@ export class AuthController {
       password,
     });
 
-    const fifteenDaysFromNow = 60 * 1000 * 60 * 24 * 15;
+    const fifteenDaysFromNow = 60 * 1000 * 60 * 24 * 20;
     return response
       .status(201)
       .cookie('access_token', accessToken, {
