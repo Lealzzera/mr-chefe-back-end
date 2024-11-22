@@ -3,19 +3,26 @@ import { InMemoryStoresRepository } from '../repositories/in-memory-stores-repos
 import { CreateStoreService } from './create-store.service';
 import { InMemoryUsersRepository } from 'src/modules/users/repositories/in-memory-repositories/in-memory-users.repository';
 import { NotFoundException } from '@nestjs/common';
+import { InMemoryUserStoresRepository } from 'src/modules/userStores/repositories/in-memory-user-stores-repository/in-memory-user-stores-repository';
 
 let inMemoryStoresRepository: InMemoryStoresRepository;
-let usersRepository: InMemoryUsersRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
+let inMemoryUserStoreRepository: InMemoryUserStoresRepository;
 let sut: CreateStoreService;
 
 describe('Create store service tests', () => {
   beforeEach(() => {
     inMemoryStoresRepository = new InMemoryStoresRepository();
-    usersRepository = new InMemoryUsersRepository();
-    sut = new CreateStoreService(inMemoryStoresRepository, usersRepository);
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    inMemoryUserStoreRepository = new InMemoryUserStoresRepository();
+    sut = new CreateStoreService(
+      inMemoryStoresRepository,
+      inMemoryUsersRepository,
+      inMemoryUserStoreRepository,
+    );
   });
   it('should be able to create a store', async () => {
-    const user = await usersRepository.create({
+    const user = await inMemoryUsersRepository.create({
       name: 'John Doe',
       email: 'john@acme.com',
       password: 'test123456',
